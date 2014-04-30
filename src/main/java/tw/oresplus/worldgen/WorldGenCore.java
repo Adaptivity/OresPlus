@@ -2,6 +2,7 @@ package tw.oresplus.worldgen;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -15,9 +16,11 @@ import cpw.mods.fml.common.registry.GameRegistry;
 
 public class WorldGenCore 
 implements IWorldGenerator {
-	public static List<WorldGenOre> oreGenOverworld = new ArrayList();
-	public static List<WorldGenOre> oreGenNether = new ArrayList();
-	public static List<WorldGenOre> oreGenEnd = new ArrayList();
+	public static HashMap<Integer, ArrayList<WorldGenOre>> oreGenerators = new HashMap();
+	
+	//public static List<WorldGenOre> oreGenOverworld = new ArrayList();
+	//public static List<WorldGenOre> oreGenNether = new ArrayList();
+	//public static List<WorldGenOre> oreGenEnd = new ArrayList();
 	
 	public static Collection<String> biomeListBauxite = new ArrayList();
 	public static Collection<String> biomeListCassiterite = new ArrayList();
@@ -40,21 +43,34 @@ implements IWorldGenerator {
 	}
 	
 	public void doWorldGen(Random random, World world, int chunkX, int chunkZ, boolean newChunk) {
-		switch (world.provider.dimensionId) {
-		case -1:
-			generateNether(world, random, chunkX*16, chunkZ*16, newChunk);
-			break;
-		case 1:
-			generateEnd(world, random, chunkX*16, chunkZ*16, newChunk);
-			break;
-		default: 
-			generateSurface(world, random, chunkX*16, chunkZ*16, newChunk);
+		ArrayList<WorldGenOre> generators = oreGenerators.get(world.provider.dimensionId);
+		if (generators != null) {
+			for (WorldGenOre oreGen : generators) {
+				if (newChunk || oreGen.doRegen)
+					oreGen.generate(world, random, chunkX * 16, chunkZ * 16);
+			}
 		}
+		/*
+		else
+		{
+			switch (world.provider.dimensionId) {
+			case -1:
+				generateNether(world, random, chunkX*16, chunkZ*16, newChunk);
+				break;
+			case 1:
+				generateEnd(world, random, chunkX*16, chunkZ*16, newChunk);
+				break;
+			default: 
+				generateSurface(world, random, chunkX*16, chunkZ*16, newChunk);
+			}
+		}
+		*/
 		
 		if (!newChunk)
 			world.getChunkFromChunkCoords(chunkX, chunkZ).setChunkModified();
 	}
 	
+	/*
 	public void generateEnd(World world, Random random, int blockX, int blockZ, boolean newChunk){
 		for (WorldGenOre oreGen : this.oreGenEnd)
 			if(newChunk || oreGen.doRegen)
@@ -78,6 +94,7 @@ implements IWorldGenerator {
 				oreGen.generate(world, random, blockX, blockZ);
 			}
 	}
+	*/
 
 	static {
 		biomeListBauxite.add(BiomeGenBase.plains.biomeName);

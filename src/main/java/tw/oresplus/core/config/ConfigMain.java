@@ -20,7 +20,6 @@ public class ConfigMain extends ConfigCore {
 		super.init("Main", configFile);
 		
 		config.addCustomCategoryComment(CAT_ORES, "Ore configuration = oreEnabled,oreSource");
-		config.addCustomCategoryComment(CAT_ORE_GEN, "Ore generator configuration = generatorEnabled,denisty%,regenerateOre");
 	    config.addCustomCategoryComment(CAT_REGEN, "Configure general regeneration options here");
 		
 		configured = true;

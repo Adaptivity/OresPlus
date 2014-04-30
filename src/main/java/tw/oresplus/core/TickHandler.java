@@ -8,6 +8,8 @@ import tw.oresplus.OresPlus;
 import tw.oresplus.core.helpers.BCHelper;
 import tw.oresplus.core.helpers.Helpers;
 import tw.oresplus.worldgen.OreGenerators;
+import tw.oresplus.worldgen.WorldGenCore;
+import tw.oresplus.worldgen.WorldGenOre;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.chunk.Chunk;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -23,6 +25,22 @@ public class TickHandler {
 	public boolean onWorldTick(TickEvent.WorldTickEvent event) {
 		int dim = event.world.provider.dimensionId;
 		
+		ArrayList<WorldGenOre> generators = WorldGenCore.oreGenerators.get(dim);
+		if (generators != null) {
+			for (WorldGenOre oreGen : WorldGenCore.oreGenerators.get(dim)) {
+				ArrayList<ChunkCoordIntPair> chunks = oreGen.regenList.get(dim);
+				if ((chunks != null) && (!chunks.isEmpty())) {
+					ChunkCoordIntPair coords = chunks.get(0);
+					oreGen.generate(event.world, event.world.rand, coords.chunkXPos * 16, coords.chunkZPos * 16);
+			        if (OresPlus.logRegenerations) {
+			        	OreLog.info("Regenerated " + oreGen.toString() + " at chunk " + coords.chunkXPos + "," + coords.chunkZPos);
+				    }
+				    chunks.remove(0);
+				    oreGen.regenList.put(Integer.valueOf(dim), chunks);
+				}
+			}
+		}
+		/*
 	    for (OreGenerators oreGen : OreGenerators.values()) {
 	        ArrayList chunks = (ArrayList)oreGen.generator.regenList.get(Integer.valueOf(dim));
 	        if ((chunks != null) && (!chunks.isEmpty())) {
@@ -37,6 +55,7 @@ public class TickHandler {
 	        }
 
 	      }
+	      */
 		
 		if (Helpers.BuildCraft.isLoaded()) {
 			ArrayList chunks = oilRegenList.get(Integer.valueOf(dim));

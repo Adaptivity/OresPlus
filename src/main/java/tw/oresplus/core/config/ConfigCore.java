@@ -64,6 +64,22 @@ public abstract class ConfigCore {
 			config.save();
 	}
 	
+	public void saveQuiet() {
+		if (!configured) {
+			OresPlus.log.info("Error - configuration not initialized!");
+			return;		
+		}
+		
+		if (configFileVersion != configVersion) {
+			Property prop = config.get(CAT_CONFIG, "configVersion", configVersion);
+			prop.comment = "Configuration File Version - Do not change, modifying this may break your game";
+			prop.set(configVersion);
+		}
+		
+		if (config.hasChanged())
+			config.save();
+	}
+	
 	private int getInt(String key, int defaultValue, String comment) {
 		return getInt(Configuration.CATEGORY_GENERAL, key, defaultValue, comment);
 	}

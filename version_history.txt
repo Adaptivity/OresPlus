@@ -1,3 +1,7 @@
+v0.5.32
+-started implementing dimensional control to ore generators
+-ore generators still generating even if disabled
+
 v0.5.31
 -fixed multiple crashes caused by nethandler
 

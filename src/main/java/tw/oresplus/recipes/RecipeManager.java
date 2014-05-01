@@ -29,6 +29,7 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
@@ -190,12 +191,23 @@ public class RecipeManager {
 	public static void replaceRecipeResults() {
 		// replace smelting results
 		OresPlus.log.info("Replacing smelting results");
-		Collection smeltingResultsList = FurnaceRecipes.smelting().getSmeltingList().values();
-		for (Object result : smeltingResultsList.toArray()) {
+		//Collection smeltingResultsList = FurnaceRecipes.smelting().getSmeltingList().values();
+		Iterator iterator = FurnaceRecipes.smelting().getSmeltingList().keySet().iterator();
+		//for (Object result : smeltingResultsList.toArray()) {
+		while (iterator.hasNext()) {
+			Object result = iterator.next();
 			if (result instanceof ItemStack) {
 				Item item = ((ItemStack)result).getItem();
 				UniqueIdentifier itemUid = GameRegistry.findUniqueIdentifierFor(item);
-				OresPlus.log.info("Recipe Result " + itemUid.modId + ":" + itemUid.name);
+				if (!itemUid.modId.equals("minecraft") && !itemUid.modId.equals(OresPlus.MOD_ID)) {
+					OresPlus.log.debug("Found potential candidate item " + itemUid.modId + ":" + itemUid.name);
+					String oreDictName = OreDictionary.getOreName(OreDictionary.getOreID((ItemStack)result));
+					Item replacement = Ores.manager.getOreItem(oreDictName);
+					if (replacement != null) {
+						result = replacement;
+						OresPlus.log.debug("Found replacement item for candidate " + replacement.getUnlocalizedName());
+					}
+				}
 			}
 		}
 		//ItemStack test = smeltingResultsList.

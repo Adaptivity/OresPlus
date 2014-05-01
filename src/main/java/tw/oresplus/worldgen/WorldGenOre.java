@@ -36,15 +36,12 @@ public class WorldGenOre {
 		{
 		case -1:
 			target = net.minecraft.init.Blocks.netherrack;
-			//WorldGenCore.oreGenNether.add(this);
 			break;
 		case 1:
 			target = net.minecraft.init.Blocks.end_stone;
-			//WorldGenCore.oreGenEnd.add(this);
 			break;
 		default:
 			target = net.minecraft.init.Blocks.stone;
-			//WorldGenCore.oreGenOverworld.add(this);
 		}
 		
 		if (ore.oreName.equals("oreBauxite"))
@@ -165,6 +162,8 @@ public class WorldGenOre {
 	}
 		
 	private boolean isNearLava(World world, int nearX, int nearY, int nearZ) {
+		if (world.getBlock(nearX, nearY- 1, nearZ).equals(net.minecraft.init.Blocks.lava))
+			return true;
 		for (int k = 1; k <= 4; k++) {
 			if (world.getBlock(nearX, nearY - k, nearZ).equals(net.minecraft.init.Blocks.lava))
 				return true;

@@ -32,6 +32,7 @@ public class TickHandler {
 				if ((chunks != null) && (!chunks.isEmpty())) {
 					ChunkCoordIntPair coords = chunks.get(0);
 					oreGen.generate(event.world, event.world.rand, coords.chunkXPos * 16, coords.chunkZPos * 16);
+					event.world.getChunkFromChunkCoords(coords.chunkXPos, coords.chunkZPos).setChunkModified();
 			        if (OresPlus.logRegenerations) {
 			        	OreLog.info("Regenerated " + oreGen.toString() + " at chunk " + coords.chunkXPos + "," + coords.chunkZPos);
 				    }
@@ -40,22 +41,6 @@ public class TickHandler {
 				}
 			}
 		}
-		/*
-	    for (OreGenerators oreGen : OreGenerators.values()) {
-	        ArrayList chunks = (ArrayList)oreGen.generator.regenList.get(Integer.valueOf(dim));
-	        if ((chunks != null) && (!chunks.isEmpty())) {
-	          ChunkCoordIntPair coords = (ChunkCoordIntPair)chunks.get(0);
-	          oreGen.generator.generate(event.world, event.world.rand, coords.chunkXPos, coords.chunkZPos);
-	          event.world.getChunkFromChunkCoords(coords.chunkXPos, coords.chunkZPos).setChunkModified();;
-	          if (OresPlus.logRegenerations) {
-	            OreLog.info("Regenerated " + oreGen.toString() + " at chunk " + coords.chunkXPos + "," + coords.chunkZPos);
-	          }
-	          chunks.remove(0);
-	          oreGen.generator.regenList.put(Integer.valueOf(dim), chunks);
-	        }
-
-	      }
-	      */
 		
 		if (Helpers.BuildCraft.isLoaded()) {
 			ArrayList chunks = oilRegenList.get(Integer.valueOf(dim));

@@ -120,20 +120,6 @@ public class OresPlus {
     	Items.init();
     	Fluids.init();
     	
-    	/*
-    	//Register Ore Generators
-    	log.info("Registering Ore Generators");
-    	for (OreGenerators oreGen : OreGenerators.values()) {
-    		oreGen.registerGenerator();
-    	}
-    	for (OreGeneratorsNether oreGen : OreGeneratorsNether.values()) {
-    		oreGen.registerGenerator();
-    	}
-    	for (OreGeneratorsEnd oreGen : OreGeneratorsEnd.values()) {
-    		oreGen.registerGenerator();
-    	}
-    	*/
-    	
 		config.save();
 		
 		// Initialize Integration Helpers
